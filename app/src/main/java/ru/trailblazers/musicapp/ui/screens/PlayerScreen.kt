@@ -1,5 +1,7 @@
 package ru.trailblazers.musicapp.ui.screens
 
+import android.media.AudioAttributes
+import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -65,8 +67,8 @@ class PlayerScreen(
     private val room: Room
 ) : Screen {
 
-    private val currentTrack = Track(id = 0L, name = "ASHPHALT 8", artist = "MACAN", durationMillis = 200000L)
-    private val isHost = false
+    private val currentTrack = Track(id = 0L, name = "ASHPHALT 8", artist = "MACAN", durationMillis = 200000L, url = "")
+    private val isHost = true
     private val chatMessages = listOf(
         ChatMessage(sender = "Никнейм 1", text = "Текст сообщения"),
         ChatMessage(sender = "Никнейм 2", text = "Текст сообщения"),
@@ -222,6 +224,19 @@ class PlayerScreen(
                 .size(48.dp),
             onClick = {
                 isPlaying = !isPlaying
+
+                val url = "http://10.242.242.160:8080/tracks/get/Depeche Mode - Enjoy The Silence (Mike Shinoda Reinterpretation).mp3"
+                val mediaPlayer = MediaPlayer().apply {
+                    setAudioAttributes(
+                        AudioAttributes.Builder()
+                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                            .setUsage(AudioAttributes.USAGE_MEDIA)
+                            .build()
+                    )
+                    setDataSource(url)
+                    prepare()
+                    start()
+                }
             }
         ) {
             Icon(

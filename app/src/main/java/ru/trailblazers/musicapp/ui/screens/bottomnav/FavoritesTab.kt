@@ -38,10 +38,10 @@ import ru.trailblazers.musicapp.ui.utils.TrackUtils.Companion.songDurationToStri
 object FavoritesTab : Tab {
 
     private val favoritesList = listOf(
-        Track(id = 0L, name = "Песня 1", artist = "Исполнитель 1", durationMillis = 180000),
-        Track(id = 1L, name = "Песня 2", artist = "Исполнитель 2", durationMillis = 180000),
-        Track(id = 2L, name = "Песня 3", artist = "Исполнитель 3", durationMillis = 180000),
-        Track(id = 3L, name = "Песня 4", artist = "Исполнитель 4", durationMillis = 180000),
+        Track(id = 0L, name = "Песня 1", artist = "Исполнитель 1", durationMillis = 180000, url = ""),
+        Track(id = 1L, name = "Песня 2", artist = "Исполнитель 2", durationMillis = 180000, url = ""),
+        Track(id = 2L, name = "Песня 3", artist = "Исполнитель 3", durationMillis = 180000, url = ""),
+        Track(id = 3L, name = "Песня 4", artist = "Исполнитель 4", durationMillis = 180000, url = ""),
     )
 
     override val options: TabOptions

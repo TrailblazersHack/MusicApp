@@ -6,5 +6,6 @@ package ru.trailblazers.musicapp.data.models
 data class Room(
     val id: Long,
     val name: String,
-    val participants: Int
+    val participants: Int,
+    val host: User
 )
