@@ -16,7 +16,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -54,11 +53,6 @@ class MainScreen : Screen {
             bottomBarState.value = true // todo: hide bottom nav bar when player screen is opened
 
             Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = { Text(text = tabNavigator.current.options.title) },
-                    )
-                },
                 content = { paddingValues ->
                     Surface(
                         modifier = Modifier
