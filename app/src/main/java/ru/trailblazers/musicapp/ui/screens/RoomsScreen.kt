@@ -1,25 +1,77 @@
 package ru.trailblazers.musicapp.ui.screens
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import ru.trailblazers.musicapp.R
+import ru.trailblazers.musicapp.data.models.Room
 
 /**
  * @author nvoxel
  */
 class RoomsScreen : Screen {
 
+    private val roomsList = listOf(
+        Room(id = 0L, name = "Название комнаты", participants = 10),
+        Room(id = 1L, name = "Я комната", participants = 20),
+        Room(id = 2L, name = "Название", participants = 5),
+        Room(id = 3L, name = "Комнаты", participants = 15),
+    )
+
+    @OptIn(ExperimentalLayoutApi::class)
     @Composable
     override fun Content() {
-        Column {
-            Text(text = "Комнаты")
+        val navigator = LocalNavigator.current
 
-            val navigator = LocalNavigator.current
-            Button(onClick = { navigator?.push(PlayerScreen()) }) {
-                Text(text = "Войти в комнату")
+        LazyColumn {
+            items(roomsList) { room ->
+                ElevatedCard(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp, vertical = 8.dp)
+                        .fillMaxWidth()
+                        .clickable {
+                            navigator?.push(PlayerScreen(room.id))
+                        }
+                ) {
+                    FlowRow(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(all = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp),
+                        verticalArrangement = Arrangement.Center,
+                    ) {
+                        Image(
+                            modifier = Modifier
+                                .size(size = 40.dp),
+                            painter = painterResource(id = R.drawable.room),
+                            contentDescription = room.name
+                        )
+
+                        Column {
+                            Text(text = room.name)
+                            Text(
+                                text = "${room.participants} ${pluralStringResource(id = R.plurals.participants, count = room.participants)}"
+                            )
+                        }
+                    }
+                }
             }
         }
     }

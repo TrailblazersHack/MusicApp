@@ -7,7 +7,9 @@ import cafe.adriel.voyager.core.screen.Screen
 /**
  * @author nvoxel
  */
-class PlayerScreen : Screen {
+class PlayerScreen(
+    private val roomId: Long
+) : Screen {
 
     @Composable
     override fun Content() {
