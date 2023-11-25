@@ -1,28 +1,28 @@
-package ru.trailblazers.musicapp.ui.screens.main
+package ru.trailblazers.musicapp.ui.screens.bottomnav
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.tab.Tab
 import cafe.adriel.voyager.navigator.tab.TabOptions
+import ru.trailblazers.musicapp.ui.screens.RoomsScreen
+import ru.trailblazers.musicapp.ui.theme.Groups
 
 /**
  * @author nvoxel
  */
-object FavoritesTab : Tab {
+object MainTab : Tab {
 
     override val options: TabOptions
         @Composable
         get() {
-            val icon = rememberVectorPainter(image = Icons.Default.Favorite)
+            val icon = rememberVectorPainter(image = Groups)
 
             return remember {
                 TabOptions(
-                    index = 0u,
-                    title = "Избранное",
+                    index = 1u,
+                    title = "Комнаты",
                     icon = icon
                 )
             }
@@ -30,6 +30,6 @@ object FavoritesTab : Tab {
 
     @Composable
     override fun Content() {
-        Text(text = "Избранное")
+        Navigator(RoomsScreen())
     }
 }

@@ -1,8 +1,7 @@
-package ru.trailblazers.musicapp.ui.screens.main
+package ru.trailblazers.musicapp.ui.screens.bottomnav
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -13,17 +12,17 @@ import cafe.adriel.voyager.navigator.tab.TabOptions
 /**
  * @author nvoxel
  */
-object ProfileTab : Tab {
+object FavoritesTab : Tab {
 
     override val options: TabOptions
         @Composable
         get() {
-            val icon = rememberVectorPainter(image = Icons.Default.Person)
+            val icon = rememberVectorPainter(image = Icons.Default.Favorite)
 
             return remember {
                 TabOptions(
-                    index = 2u,
-                    title = "Профиль",
+                    index = 0u,
+                    title = "Избранное",
                     icon = icon
                 )
             }
@@ -31,6 +30,6 @@ object ProfileTab : Tab {
 
     @Composable
     override fun Content() {
-        Text(text = "Профиль")
+        Text(text = "Избранное")
     }
 }

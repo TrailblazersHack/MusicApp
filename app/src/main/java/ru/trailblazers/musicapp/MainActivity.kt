@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import cafe.adriel.voyager.navigator.Navigator
 import ru.trailblazers.musicapp.ui.screens.AuthScreen
-import ru.trailblazers.musicapp.ui.screens.main.MainScreen
+import ru.trailblazers.musicapp.ui.screens.MainScreen
 import ru.trailblazers.musicapp.ui.theme.MusicAppTheme
 
 class MainActivity : ComponentActivity() {
