@@ -1,6 +1,7 @@
 package ru.trailblazers.musicapp.ui.screens
 
 import android.media.AudioAttributes
+import android.media.MediaMetadataRetriever
 import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -39,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +56,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import ru.trailblazers.musicapp.R
 import ru.trailblazers.musicapp.data.models.ChatMessage
 import ru.trailblazers.musicapp.data.models.Room
@@ -67,7 +72,8 @@ class PlayerScreen(
     private val room: Room
 ) : Screen {
 
-    private val currentTrack = Track(id = 0L, name = "ASHPHALT 8", artist = "MACAN", durationMillis = 200000L, url = "")
+    private var currentTrack =
+        Track(id = 0L, name = "ASHPHALT 8", artist = "MACAN", durationMillis = 135602L, url = "https://nvoxel.github.io/testaudio.mp3")
     private val isHost = true
     private val chatMessages = listOf(
         ChatMessage(sender = "Никнейм 1", text = "Текст сообщения"),
@@ -75,6 +81,16 @@ class PlayerScreen(
         ChatMessage(sender = "Никнейм 3", text = "Текст сообщения"),
         ChatMessage(sender = "Никнейм 4", text = "Текст сообщения"),
     )
+
+    private val mediaPlayer = MediaPlayer().apply {
+        setAudioAttributes(
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
+                .build()
+        )
+        setDataSource(currentTrack.url)
+    }
 
     @Composable
     override fun Content() {
@@ -88,6 +104,25 @@ class PlayerScreen(
             if (isHost) MediaControls()
             ParticipantsButton()
             ChatWindow()
+        }
+
+        LaunchedEffect(key1 = mediaPlayer) {
+            launch {
+                withContext(Dispatchers.IO) {
+                    if (mediaPlayer.trackInfo != null && mediaPlayer.trackInfo!!.isNotEmpty()) return@withContext
+                    mediaPlayer.prepare()
+
+                    val metadataRetriever = MediaMetadataRetriever()
+                    metadataRetriever.setDataSource(currentTrack.url)
+                    currentTrack = Track(
+                        id = currentTrack.id,
+                        name = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE)!!,
+                        artist = metadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST)!!,
+                        durationMillis = mediaPlayer.duration.toLong(),
+                        url = currentTrack.url
+                    )
+                }
+            }
         }
     }
 
@@ -149,7 +184,7 @@ class PlayerScreen(
     @OptIn(ExperimentalLayoutApi::class)
     @Composable
     private fun ProgressBar() {
-        var currentProgress by rememberSaveable { mutableFloatStateOf(0.5f) }
+        var currentProgress by rememberSaveable { mutableFloatStateOf(0f) }
 
         if (isHost)
             Slider(
@@ -160,6 +195,7 @@ class PlayerScreen(
                 valueRange = 0f..(currentTrack.durationMillis / 1000).toFloat(),
                 onValueChange = { value ->
                     currentProgress = value
+                    mediaPlayer.seekTo((value * 1000).toInt())
                 }
             )
         else
@@ -218,25 +254,15 @@ class PlayerScreen(
 
     @Composable
     private fun PlayButton() {
-        var isPlaying by rememberSaveable { mutableStateOf(true) }
+        var isPlaying by rememberSaveable { mutableStateOf(false) }
+
         FilledIconButton(
             modifier = Modifier
                 .size(48.dp),
             onClick = {
+                if (isPlaying) mediaPlayer.pause()
+                else mediaPlayer.start()
                 isPlaying = !isPlaying
-
-                val url = "http://10.242.242.160:8080/tracks/get/Depeche Mode - Enjoy The Silence (Mike Shinoda Reinterpretation).mp3"
-                val mediaPlayer = MediaPlayer().apply {
-                    setAudioAttributes(
-                        AudioAttributes.Builder()
-                            .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
-                            .setUsage(AudioAttributes.USAGE_MEDIA)
-                            .build()
-                    )
-                    setDataSource(url)
-                    prepare()
-                    start()
-                }
             }
         ) {
             Icon(
